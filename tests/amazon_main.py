@@ -6,32 +6,23 @@ class AmazonSellerParce:
         self.keyword = keyword
         self.list_seller_name = []
 
-    def __page_down(self):
-        self.page.evaluate('''
-                                const scrollStep = 200;
-                                const scrollInterval = 100;
-                                const scrollHeight = document.documentElement.scrollHeight;
-                                let currentPosition = 0;
-                                const interval = setInterval(() => {
-                                    window.scrollBy(0, scrollStep);
-                                    currentPosition += scrollStep;
-                                
-                                    if(currentPosition >= scrollHeight) {
-                                        clearInterval(interval);
-                                    }
-                                }, scrollInterval);
-                            ''')
-
     def __get_links(self):
-        self.page.wait_for_selector(".rush-component")
-        self.__page_down()
-        self.page.wait_for_selector(f':text("Dalej")')
-
-        links = self.page.query_selector_all(
+        self.page.wait_for_selector(
             'div[data-component-type="s-search-result"]'
         )
-        print(len(links))
 
+        cards = self.page.query_selector_all(
+            'div[data-component-type="s-search-result"]'
+        )
+
+        for card in cards:
+            link = card.query_selector("a.s-line-clamp-4")
+
+            if link:
+                href = link.get_attribute("href")
+
+                if href:
+                    url = "https://www.amazon.pl" + href
 
     def parce(self):
         with sync_playwright() as playwright:
@@ -42,8 +33,8 @@ class AmazonSellerParce:
             self.page.get_by_placeholder("Szukaj na Amazon.pl").type(self.keyword, delay=0.3)
             self.page.query_selector("input[type='submit']").click()
             self.__get_links()
-            time.sleep(10)
+            time.sleep(5)
 
 if __name__ == "__main__":
     AmazonSellerParce("Bóbr").parce()
-    time.sleep(10)
+    time.sleep(5)
