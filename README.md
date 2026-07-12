@@ -12,7 +12,7 @@ The main goal of the project was to automate work with Amazon pages: perform pro
 ![Search results](screenshots/search_result.png)
 
 ### Seller extraction
-![Seller extraction](screenshots/seller_page.png)
+![Seller extraction](screenshots/Seller_page.png)
 ## What I implemented in this project:
 
 * Learned how to control a browser using Playwright:
