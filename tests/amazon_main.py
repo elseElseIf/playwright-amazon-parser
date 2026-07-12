@@ -6,16 +6,29 @@ class AmazonSellerParce:
         self.keyword = keyword
         self.list_seller_name = []
 
+    def __get_seller_name(self, url:str):
+        self.page2 = self.context.new_page()
+        self.page2.goto(url=url)
+        self.page2.wait_for_selector("#productTitle")
+
+        seller = self.page2.query_selector(
+            "div.offer-display-feature-text.odf-truncation-popover"
+        )
+
+        if seller:
+            print("Seller:", seller.inner_text())
+        else:
+            print("Seller not found")
+
+
     def __get_links(self):
-        self.page.wait_for_selector(
-            'div[data-component-type="s-search-result"]'
-        )
+        self.page.wait_for_selector('div[data-component-type="s-search-result"]')
 
-        cards = self.page.query_selector_all(
-            'div[data-component-type="s-search-result"]'
-        )
+        cards = self.page.query_selector_all('div[data-component-type="s-search-result"]')
 
-        for card in cards:
+# 9 - is a 10 sellers cards
+        for count, card in enumerate(cards):
+            if count > 9: break
             link = card.query_selector("a.s-line-clamp-4")
 
             if link:
@@ -23,6 +36,7 @@ class AmazonSellerParce:
 
                 if href:
                     url = "https://www.amazon.pl" + href
+                    self.__get_seller_name(url=url)
 
     def parce(self):
         with sync_playwright() as playwright:
