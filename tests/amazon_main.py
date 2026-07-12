@@ -32,7 +32,7 @@ class AmazonSellerParce:
             print("Seller:", seller.inner_text())
         else:
             print("Seller not found")
-
+        self.page2.close()
 
     def __get_links(self):
         self.page.wait_for_selector('div[data-component-type="s-search-result"]')
